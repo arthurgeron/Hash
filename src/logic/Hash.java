@@ -1,15 +1,12 @@
 package logic;
 
-import java.awt.List;
 import java.util.ArrayList;
-import java.util.Random;
 
 
 public class Hash {
 	private String[] hashTable;
 	boolean autoIncrement = false;
 	ArrayList<Integer> storedElements = new ArrayList<Integer>();
-	int counter;
 	public Hash() {
 		// TODO Auto-generated constructor stub
 		autoIncrement = true;
@@ -27,7 +24,6 @@ public class Hash {
 	public boolean storeInfo(String info)//Generate list position from hashCode and store it
 	{
 		int indexLocation;
-		counter = 0;
 		try{
 			indexLocation = hashCode(info);
 			
@@ -43,10 +39,6 @@ public class Hash {
 				}
 			}
 			
-			while(hashTable[indexLocation] != null && counter != hashTable.length){
-				counter++;
-				indexLocation = hashCode(String.valueOf(indexLocation + String.valueOf(indexLocation).length() * indexLocation));
-			}
 			if(hashTable[indexLocation] != null) {
 				return false;
 			}
@@ -97,10 +89,11 @@ public class Hash {
 	}
 	
 	private int hashCode(String info) {//Alterar para utilizar bits
-		  int result = 0, counter=0;
+		  int result = 0, counter=0,countTries=0;
 		  for(int i =0; i < info.length() ; i++) {
+			  result += (int)info.charAt(i);
 			  if(counter==0){
-			  result += (int)info.charAt(i) + info.length() + (i+1);
+				  result += (int)info.charAt(i) + info.length() + (i+1);
 			  	counter++;
 			  }
 			  else if(counter==1) {
@@ -115,7 +108,6 @@ public class Hash {
 				  result /= (int)info.charAt(i) / info.length();
 				  counter = 0;
 			  }
-//			  result = (int) Long.parseLong(String.valueOf(result+((int)info.charAt(i))) +info.length()) ;
 			  if(i+1<=info.length()-1){
 				  result += ((int)info.charAt(i) - (int)info.charAt(i+1));
 			  }
@@ -129,6 +121,10 @@ public class Hash {
 			  result =  (result/2) + (result%2);
 			  result = result < 0 ? Math.abs(result) : result;
 		  }
+		  while(hashTable[result] != null && countTries != hashTable.length){
+			  countTries++;
+				result = result - String.valueOf(result).length() - (String.valueOf(result).length()%2);
+			}
 		  return result;
 		}
 	
