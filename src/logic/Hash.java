@@ -11,14 +11,9 @@ import java.util.List;
 
 
 public class Hash  {
-	private List<Integer> keys = new ArrayList<Integer>();
-	private List<String> info = new ArrayList<String>();
 	
 	public Hash() {
 	}
-	
-	
-
 	
 	public boolean storeInfo(String info)//Generate list position from hashCode and store it
 	{
@@ -195,5 +190,6 @@ public class Hash  {
 		  return result;
 	}
 	
-
+	private List<Integer> keys = new ArrayList<Integer>();
+	private List<String> info = new ArrayList<String>();
 }
