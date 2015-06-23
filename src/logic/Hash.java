@@ -12,12 +12,17 @@ import java.util.List;
 
 public class Hash  {
 	
+	String[] hashTable;
+	
 	public Hash() {
 	}
 	
 	public boolean storeInfo(String info)//Generate list position from hashCode and store it
 	{
 		int indexLocation;
+		
+		
+		
 		try{
 			indexLocation = hashCode(info);
 			if(keys.contains(indexLocation)){
@@ -107,15 +112,20 @@ public class Hash  {
 		  result = result < 0 ? Math.abs(result) : result;
 		  result += auxiliar;
 		  result = result < 0 ? Math.abs(result) : result;
+		  result = reduceKey(result);
+		  
 		  return result;
 	}
 	
 	public void readAndTestFile(String fileLocation) throws FileNotFoundException{
+		
 		BufferedReader reader = new BufferedReader(new FileReader(fileLocation));
 		String currentLine;
 		String[] words;
 		int collisionCounter=0,wordsCounter=0;
 		Scanner scanner = new Scanner(System.in);
+		int length = (int) new BufferedReader(new FileReader(fileLocation)).lines().count();
+		hashTable = new String[length];
 		
 		try {
 			while ( reader.ready())
@@ -188,6 +198,13 @@ public class Hash  {
 		  }
 		  result = (b << 16) | a;
 		  return result;
+	}
+	
+	private int reduceKey(int key){
+		while(String.valueOf(key).length() > hashTable.length){
+			key = key % 10 * String.valueOf(key).length();
+		}
+		return key;
 	}
 	
 	private List<Integer> keys = new ArrayList<Integer>();
