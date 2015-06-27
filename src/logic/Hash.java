@@ -13,6 +13,8 @@ import java.util.List;
 public class Hash  {
 	
 	String[] hashTable;
+	private List<Integer> keys = new ArrayList<Integer>();
+	
 	
 	public Hash() {
 	}
@@ -25,17 +27,15 @@ public class Hash  {
 		
 		try{
 			indexLocation = hashCode(info);
-			if(keys.contains(indexLocation)){
-				if(!keys.contains(hashCode(String.valueOf(indexLocation))))
+			if(hashTable[indexLocation]!=null){
+				if(hashTable[hashCode(String.valueOf(indexLocation))]==null)
 				{
-					keys.add(indexLocation);
-					this.info.add(info);
+					hashTable[indexLocation] = info;
 				}
 				return false;
 			}
 			else{
-				keys.add(indexLocation);
-				this.info.add(info);
+				hashTable[indexLocation] = info;
 				return true;
 			}
 		}
@@ -50,13 +50,12 @@ public class Hash  {
 		int indexLocation;
 
 		try{
-			indexLocation = hashCode2(info);
+			indexLocation = hashCodeAdler32(info);
 			if(keys.contains(indexLocation)){
 				return false;
 			}
 			else{
 				keys.add(indexLocation);
-				this.info.add(info);
 				return true;
 			}
 		}
@@ -66,19 +65,21 @@ public class Hash  {
 	}
 	
 	public void drawTable(){
-
-		for(Integer hash : keys) {
-			
-				System.out.println("Position: "+keys.indexOf(hash)+" Value: "+info.get(keys.indexOf(hash)));
-			
+	
+		int counter=0;
+		for(int i = 0 ; i < hashTable.length ; i ++) {
+		    if(hashTable[i]!=null){
+		    	System.out.println("Position: "+ i +" Value: "+hashTable[i]);
+		    	counter++;
+		    }
 		}
-		System.out.println("Number of valid elements: "+keys.size());
+		System.out.println("Number of valid elements: "+counter);
 	}
 	
 	public boolean containInfo(String info)//Find info from list using hashCode
 	{
 			int indexLocation = hashCode(info);
-			if(keys.contains(indexLocation) && this.info.get(keys.indexOf(indexLocation)).equals(info)){
+			if(keys.contains(indexLocation)){
 				return true;
 			}
 			else {
@@ -187,7 +188,7 @@ public class Hash  {
 		scanner.close();
 	}
 	
-	private int hashCode2(String info) {//Adler32
+	private int hashCodeAdler32(String info) {//Adler32
 		  int base,result = 0, a=0,b;
 		  a = 1;
 		  b = 0;
@@ -201,12 +202,13 @@ public class Hash  {
 	}
 	
 	private int reduceKey(int key){
-		while(String.valueOf(key).length() > hashTable.length){
-			key = key % 10 * String.valueOf(key).length();
+		while(key > hashTable.length){
+			//key =  Integer.parseInt(Integer.toString(key).substring(1));
+			key = key > 10 ? ((int) key / 10 ) : key;
 		}
+
 		return key;
 	}
 	
-	private List<Integer> keys = new ArrayList<Integer>();
-	private List<String> info = new ArrayList<String>();
+	
 }
